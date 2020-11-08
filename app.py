@@ -29,10 +29,20 @@ db.session.commit()
 
 import models 
 
+@socketio.on("new user")
+def on_new_user(data):
+    db.session.add(models.AppUser("tonytiger@gmail.com","Tony","Tiger", models.AuthUserType.GOOGLE,"tonytiger.png"))
+    
+
+
 @app.route('/')
 def index():
     models.db.create_all()
     return flask.render_template("index.html")
+    
+@app.route('/login')
+def login():
+    return flask.render_template("login.html")
     
 if __name__ == '__main__': 
     socketio.run(
