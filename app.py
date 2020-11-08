@@ -28,12 +28,6 @@ db.app = app
 db.create_all()
 db.session.commit()
 
-
-  
-# video = mux.mux()
-# print(video.stream_key)
-# print(video.link)
-
 @socketio.on("new user")
 def on_new_user(data):
     db.session.add(models.AppUser("tonytiger@gmail.com","Tony","Tiger", models.AuthUserType.GOOGLE,"tonytiger.png"))
@@ -50,7 +44,7 @@ def on_new_stream(data):
 
 @app.route('/')
 def index():
-    # models.db.create_all()
+    models.db.create_all()
     return flask.render_template("index.html")
     
 @app.route('/login')
