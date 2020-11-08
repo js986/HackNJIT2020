@@ -5,7 +5,8 @@ import flask
 import flask_socketio
 import flask_sqlalchemy
 from dotenv import load_dotenv
-import ffmpeg
+import mux
+import models 
 
 app = flask.Flask(__name__)
 
@@ -27,17 +28,29 @@ db.app = app
 db.create_all()
 db.session.commit()
 
-import models 
+
+  
+# video = mux.mux()
+# print(video.stream_key)
+# print(video.link)
 
 @socketio.on("new user")
 def on_new_user(data):
     db.session.add(models.AppUser("tonytiger@gmail.com","Tony","Tiger", models.AuthUserType.GOOGLE,"tonytiger.png"))
     
-
+@socketio.on("new stream")
+def on_new_stream(data):
+    video = mux.mux()
+    stream_key = video.stream_key
+    stream_link = video.link
+    socketio.emit('stream_data', {
+        'streamKey': stream_key,
+        'link': stream_link
+        })
 
 @app.route('/')
 def index():
-    models.db.create_all()
+    # models.db.create_all()
     return flask.render_template("index.html")
     
 @app.route('/login')
